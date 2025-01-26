@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "8457244300",
+    "project_id": "chating-app-3c8b9",
+    "storage_bucket": "chating-app-3c8b9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8457244300:android:ff58ab33347318a3a5f5a9",
+        "android_client_info": {
+          "package_name": "com.example.car_charging_station"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9_856gtMYG3j5INl2hU74mMbu7qArfNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8457244300:android:4c899a7c0204764aa5f5a9",
+        "android_client_info": {
+          "package_name": "com.example.chat_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9_856gtMYG3j5INl2hU74mMbu7qArfNc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
