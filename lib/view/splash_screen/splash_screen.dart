@@ -4,6 +4,7 @@ import 'package:chat_app/shared/config/resources/color_manger.dart';
 import 'package:chat_app/view/intro_screen/intro_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
@@ -43,6 +44,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManger.kPrimary,
+      appBar: AppBar(
+        toolbarHeight: 0,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: ColorManger.kPrimary,
+          statusBarIconBrightness: Brightness.light
+        ),
+      ),
       body: Center(
         child: SvgPicture.asset('assets/images/logo.svg'),
       ),

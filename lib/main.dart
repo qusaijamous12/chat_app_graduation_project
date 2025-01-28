@@ -1,7 +1,9 @@
 import 'package:chat_app/controller/user_controller/user_controller.dart';
+import 'package:chat_app/shared/config/resources/color_manger.dart';
 import 'package:chat_app/view/splash_screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import 'firebase_options.dart';
@@ -27,7 +29,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: ColorManger.kPrimaryTwo,
+            statusBarIconBrightness: Brightness.light
+          )
+        )
       ),
       debugShowCheckedModeBanner: false,
       home: SplashScreen(),
