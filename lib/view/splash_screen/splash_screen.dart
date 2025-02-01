@@ -21,8 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
    _onStart(){
      _timer=Timer(Duration(seconds: 4), _onFinish);
    }
-
    _onFinish(){
+
      Get.offAll(()=>const IntroScreen());
 
    }

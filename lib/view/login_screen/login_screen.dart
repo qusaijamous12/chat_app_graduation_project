@@ -2,6 +2,7 @@ import 'package:chat_app/shared/config/resources/font_manger.dart';
 import 'package:chat_app/shared/config/resources/padding_manger.dart';
 import 'package:chat_app/shared/config/resources/style_manger.dart';
 import 'package:chat_app/shared/widgets/my_button.dart';
+import 'package:chat_app/shared/widgets/my_text_field.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,26 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(
                 height: PaddingManger.kPadding,
               ),
-              Container(
-                height: 50,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadiusDirectional.circular(
-                        PaddingManger.kPadding),
-                    color: ColorManger.grey2
-                ),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                      labelText: 'Email Address',
-                      prefixIcon: Icon(Icons.email_outlined),
-                      border: InputBorder.none
 
-
-                  ),
-                ),
-              ),
+              MyTextField(controller: _emailController, labelText: 'Email Address', prefixIcon: Icon(Icons.email_outlined)),
               const SizedBox(
                 height: PaddingManger.kPadding,
               ),

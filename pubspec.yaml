@@ -43,6 +43,7 @@ dependencies:
   conditional_builder_null_safety: ^0.0.6
   loading_overlay: ^0.4.2
   url_launcher: ^6.1.5
+  intl: ^0.17.0
 
 
 dev_dependencies:

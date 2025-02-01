@@ -39,6 +39,7 @@ class _IntroScreenState extends State<IntroScreen> {
             MyButton(title: 'Register', onTap: (){
               Get.offAll(()=>const RegisterScreen());
             }, btnColor: Colors.white, textColor:ColorManger.kPrimaryTwo),
+            const Spacer(),
 
           ],
         ),
