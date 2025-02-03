@@ -6,6 +6,7 @@ class ChatModel {
   String? reciverId;
   String? dateTime;
   String? text;
+  String? profileImage;
 
   ChatModel({
     this.createdAt,
@@ -13,22 +14,23 @@ class ChatModel {
     this.reciverId,
     this.dateTime,
     this.text,
+    this.profileImage
   });
 
   // The fromJson constructor now formats the time.
   ChatModel.fromJson(Map<String, dynamic> json) {
     senderId = json['senderId'];
-    createdAt = json['createdAt'] ?? DateTime.now();
+    createdAt = json['createdAt'];
 
 
     dateTime = json['dateTime'];
-    //DateFormat('h:mm a').format(createdAt!); // Using 12-hour format with AM/PM
+
 
     reciverId = json['reciverId'];
     text = json['text'];
+    profileImage=json['profile_image'];
   }
 
-  // When converting to Map, store the formatted time as a string in `dateTime`
   Map<String, dynamic> toMap() {
     return {
       'senderId': senderId,
@@ -36,6 +38,7 @@ class ChatModel {
       'reciverId': reciverId,
       'dateTime': dateTime,  // Now contains formatted time
       'text': text,
+      'profile_image':profileImage
     };
   }
 }

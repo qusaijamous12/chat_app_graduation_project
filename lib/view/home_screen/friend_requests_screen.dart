@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
 import '../../shared/config/resources/color_manger.dart';
+import '../../shared/widgets/no friends.dart';
 
 class FriendRequestsScreen extends StatefulWidget {
   const FriendRequestsScreen({super.key});
@@ -44,7 +45,7 @@ class _FriendRequestsScreenState extends State<FriendRequestsScreen> {
         padding: const EdgeInsets.all(PaddingManger.kPadding),
         child: Column(
           children: [
-            if(_userController.allFriendRequest.length!=0)
+            if(_userController.allFriendRequest.isNotEmpty)
             Expanded(
               child: ListView.separated(
 
@@ -60,24 +61,10 @@ class _FriendRequestsScreenState extends State<FriendRequestsScreen> {
                   ),
                   itemCount: _userController.allFriendRequest.length),
             ),
-            if(_userController.allFriendRequest.length==0)...[
+            if(_userController.allFriendRequest.isEmpty)...[
               const Spacer(),
-              Column(
-                children: [
-                  Icon(Icons.person_outline,color: ColorManger.kPrimaryTwo,size: 150,),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Align(
-                    alignment: AlignmentDirectional.center,
-                    child: Text(
-                      'There is No Friends Requests!',
-                      style: getMyMediumTextStyle(color: Colors.black,fontSize: FontSize.s20),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
+              NoFriends(title: 'There is no friends requests !',),
+             const Spacer(),
 
             ]
 
@@ -93,8 +80,7 @@ class _FriendRequestsScreenState extends State<FriendRequestsScreen> {
         children: [
           CircleAvatar(
             radius: 45,
-            backgroundImage: NetworkImage(
-                'https://static.vecteezy.com/system/resources/thumbnails/051/948/045/small_2x/a-smiling-man-with-glasses-wearing-a-blue-sweater-poses-warmly-against-a-white-background-free-photo.jpeg'),
+            backgroundImage: NetworkImage(model.profileImage??''),
           ),
           const SizedBox(
             width: 15,
@@ -149,7 +135,7 @@ class _FriendRequestsScreenState extends State<FriendRequestsScreen> {
                           )
                       ),
                       child: Text(
-                        'Accept',
+                        'Decline',
                         style: getMyRegulerTextStyle(
                             color: ColorManger.kPrimaryTwo),
                       ),

@@ -9,12 +9,13 @@ class MyTextField extends StatelessWidget {
   final String labelText;
   final Widget prefixIcon;
   final bool enabled;
-  const MyTextField({super.key,required this.controller,required this.labelText,required this.prefixIcon,this.enabled=true});
+  final TextInputType keyBoardType;
+  const MyTextField({super.key,required this.controller,required this.labelText,required this.prefixIcon,this.enabled=true,this.keyBoardType=TextInputType.emailAddress});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 58,
       decoration: BoxDecoration(
           borderRadius: BorderRadiusDirectional.circular(
               PaddingManger.kPadding),
@@ -23,7 +24,9 @@ class MyTextField extends StatelessWidget {
       clipBehavior: Clip.antiAliasWithSaveLayer,
       child: TextFormField(
         enabled: enabled,
-        keyboardType: TextInputType.emailAddress,
+        maxLines: null,
+        minLines: 1,
+        keyboardType: keyBoardType,
         controller: controller,
         decoration: InputDecoration(
             labelText: labelText,

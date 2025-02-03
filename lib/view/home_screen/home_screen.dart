@@ -1,11 +1,16 @@
 import 'package:chat_app/controller/user_controller/user_controller.dart';
+import 'package:chat_app/model/group_model.dart';
 import 'package:chat_app/model/user_model.dart';
 import 'package:chat_app/shared/config/resources/color_manger.dart';
 import 'package:chat_app/shared/config/resources/padding_manger.dart';
 import 'package:chat_app/shared/config/resources/style_manger.dart';
 import 'package:chat_app/shared/widgets/my_button.dart';
+import 'package:chat_app/shared/widgets/no%20friends.dart';
+import 'package:chat_app/view/home_screen/chat_group_screen.dart';
 import 'package:chat_app/view/home_screen/chat_screen.dart';
 import 'package:chat_app/view/home_screen/friend_requests_screen.dart';
+import 'package:chat_app/view/home_screen/group_details.dart';
+import 'package:chat_app/view/home_screen/search_screen.dart';
 import 'package:chat_app/view/home_screen/user_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,23 +34,33 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
 
+    //
+    // Future.wait([
+    // _userController.getAllUsers(),
+    // _userController.getMyFriends(),
+    // _userController.getAllGroups()
+    //
+    // ]);
+
+
+
     Future.delayed(Duration.zero,()async{
       await _userController.getAllUsers();
+
     });
-    Future.delayed(Duration.zero,()async{
-      await _userController.getMyFriends();
-    });
+
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Obx(()=>Scaffold(
+    return Obx(()=>LoadingOverlay(isLoading: _userController.isLoading,progressIndicator: CircularProgressIndicator(color: ColorManger.kPrimaryTwo,), child: Scaffold(
       body: SafeArea(
-        child: LoadingOverlay(isLoading: _userController.isLoading,progressIndicator: CircularProgressIndicator(color: ColorManger.kPrimaryTwo,) ,child: Column(
+        child: Column(
           children: [
             Container(
-              height: 150,
+              height: 180,
               padding: EdgeInsetsDirectional.all(PaddingManger.kPadding),
               decoration: BoxDecoration(
                   borderRadius: BorderRadiusDirectional.only(
@@ -53,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       bottomEnd: Radius.circular(PaddingManger.kPadding)),
                   color: ColorManger.kPrimaryTwo),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -79,16 +95,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(
                         width: 15,
                       ),
-                      Container(
-                          padding: EdgeInsetsDirectional.all(
-                              PaddingManger.kPadding / 4),
-                          decoration: BoxDecoration(
-                              color: Colors.white, shape: BoxShape.circle),
-                          child: Icon(
-                            Icons.search,
-                            color: ColorManger.kPrimaryTwo,
-                          ))
+                      GestureDetector(
+                        onTap: (){
+                          Get.to(()=>const SearchScreen());
+
+                        },
+                        child: Container(
+                            padding: EdgeInsetsDirectional.all(
+                                PaddingManger.kPadding / 4),
+                            decoration: BoxDecoration(
+                                color: Colors.white, shape: BoxShape.circle),
+                            child: Icon(
+                              Icons.search,
+                              color: ColorManger.kPrimaryTwo,
+                            )),
+                      )
                     ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Welcome ${_userController.userModel?.userName?.capitalizeFirst}',
+                      style: getMyMediumTextStyle(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   const Spacer(),
                   Row(
@@ -177,38 +211,32 @@ class _HomeScreenState extends State<HomeScreen> {
               height: PaddingManger.kPadding / 2,
             ),
             if(_selectedTab.value=='Friend')...[
-              Expanded(
-                child: ListView.separated(
-                    itemBuilder: (context,index)=>buildUserChat(_userController.allMyFriends[index]),
-                    separatorBuilder: (context,index)=>Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: PaddingManger.kPadding),
-                      child: Divider(
-                        color: ColorManger.grey2,
-                        height: 1,
-                      ),
-                    ),
-                    itemCount: _userController.allMyFriends.length),
-              )
-            ]
-            else if(_selectedTab.value=='Groups')...[
-              Expanded(
-                child: ListView.separated(
-                    itemBuilder: (context,index)=>buildGroupChat(),
-                    separatorBuilder: (context,index)=>Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: PaddingManger.kPadding),
-                      child: Divider(
-                        color: ColorManger.grey2,
-                        height: 1,
-
-                      ),
-                    ),
-                    itemCount: 5),
-              )
-            ]
-            else...[
+              if(_userController.allMyFriends.isNotEmpty)...[
                 Expanded(
                   child: ListView.separated(
-                      itemBuilder: (context,index)=>buildAllUser(_userController.allUsers[index]),
+                      itemBuilder: (context,index)=>buildUserChat(_userController.allMyFriends[index]),
+                      separatorBuilder: (context,index)=>Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: PaddingManger.kPadding),
+                        child: Divider(
+                          color: ColorManger.grey2,
+                          height: 1,
+                        ),
+                      ),
+                      itemCount: _userController.allMyFriends.length),
+                )
+              ]else...[
+                const Spacer(),
+                NoFriends(title: 'You Dont Have Friends !'),
+                const Spacer(),
+
+              ]
+
+            ]
+            else if(_selectedTab.value=='Groups')...[
+              if(_userController.allGroups.isNotEmpty)...[
+                Expanded(
+                  child: ListView.separated(
+                      itemBuilder: (context,index)=>buildGroupChat(_userController.allGroups[index]),
                       separatorBuilder: (context,index)=>Padding(
                         padding: const EdgeInsets.symmetric(horizontal: PaddingManger.kPadding),
                         child: Divider(
@@ -217,23 +245,51 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         ),
                       ),
-                      itemCount: _userController.allUsers.length),
+                      itemCount: _userController.allGroups.length),
                 )
+              ]else...[
+                Spacer(),
+                NoFriends(title: 'There is no Groups !!'),
+                Spacer(),
+              ]
+
+            ]
+            else...[
+                if(_userController.allUsers.isNotEmpty)...[
+                  Expanded(
+                    child: ListView.separated(
+                        itemBuilder: (context,index)=>buildAllUser(_userController.allUsers[index]),
+                        separatorBuilder: (context,index)=>Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: PaddingManger.kPadding),
+                          child: Divider(
+                            color: ColorManger.grey2,
+                            height: 1,
+
+                          ),
+                        ),
+                        itemCount: _userController.allUsers.length),
+                  )
+                ]else...[
+                  const   Spacer(),
+                  NoFriends(title: 'There is no Users !'),
+                  const Spacer(),
+                ]
+
 
               ]
 
           ],
-        )),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: (){
-            Get.to(()=> UserDetailsScreen(isUser: true,model: _userController.userModel??UserModel(uid: '', phoneNumber: '', email: '', userName: '', status: 0),));
+            Get.to(()=> UserDetailsScreen(isUser: true,model: _userController.userModel!));
           },
           elevation: 0,
           backgroundColor: ColorManger.kPrimaryTwo,
           child: Icon(Icons.person_outline,color: Colors.white,)
       ),
-    ));
+    )));
   }
 
   Widget buildUserChat(UserModel model) => GestureDetector(
@@ -247,8 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               CircleAvatar(
                 radius: 45,
-                backgroundImage: NetworkImage(
-                    'https://static.vecteezy.com/system/resources/thumbnails/051/948/045/small_2x/a-smiling-man-with-glasses-wearing-a-blue-sweater-poses-warmly-against-a-white-background-free-photo.jpeg'),
+                backgroundImage: AssetImage('assets/images/chat_icon.png'),
               ),
               const SizedBox(
                 width: PaddingManger.kPadding / 2,
@@ -291,61 +346,70 @@ class _HomeScreenState extends State<HomeScreen> {
               //     )
               //   ],
               // )
+              const Spacer(),
+              CircleAvatar(
+                backgroundColor: ColorManger.kPrimaryTwo,
+                radius: 8,
+              )
             ],
           ),
         ),
   );
 
-  Widget buildGroupChat() => Padding(
-    padding: const EdgeInsets.all(PaddingManger.kPadding),
-    child: Row(
-      children: [
-        CircleAvatar(
-          radius: 45,
-          backgroundImage: NetworkImage(
-              'https://st2.depositphotos.com/3591429/8813/i/450/depositphotos_88134246-stock-photo-group-of-diversity-people.jpg'),
-        ),
-        const SizedBox(
-          width: PaddingManger.kPadding / 2,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Jobs Group',
-              style: getMyRegulerTextStyle(color: Colors.black),
-            ),
-            const SizedBox(
-              height: PaddingManger.kPadding / 4,
-            ),
-            Text(
-              'Hello !!',
-              style: getMyRegulerTextStyle(color: ColorManger.grey),
-            ),
-          ],
-        ),
-        const Spacer(),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            CircleAvatar(
-              radius: 10,
-              backgroundColor: ColorManger.kPrimaryTwo,
-              child: Text(
-                '1',
-                style: getMyRegulerTextStyle(color: Colors.white),
+  Widget buildGroupChat(GroupModel model) => GestureDetector(
+    onTap: ()async{
+      if(await _userController.isUserAcceptedOrNot(groupId: model.uid)){
+        print('sasasa');
+        Get.to(()=>const ChatGroupScreen());
+      }else{
+        Get.to(()=> GroupDetails(model: model,));
+      }
+
+
+    },
+    behavior: HitTestBehavior.opaque,
+    child: Padding(
+      padding: const EdgeInsets.all(PaddingManger.kPadding),
+      child: Row(
+        children: [
+          CircleAvatar(
+            radius: 45,
+            backgroundImage: NetworkImage(
+                'https://st2.depositphotos.com/3591429/8813/i/450/depositphotos_88134246-stock-photo-group-of-diversity-people.jpg'),
+          ),
+          const SizedBox(
+            width: PaddingManger.kPadding / 2,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                model.title,
+                style: getMyRegulerTextStyle(color: Colors.black),
               ),
-            ),
-            const SizedBox(
-              height: PaddingManger.kPadding / 5,
-            ),
-            Text(
-              '5:45 am',
-              style: getMyRegulerTextStyle(color: ColorManger.grey),
-            )
-          ],
-        )
-      ],
+
+            ],
+          ),
+          const Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              CircleAvatar(
+                radius: 15,
+                backgroundColor: ColorManger.kPrimaryTwo,
+                child: Text(
+                  model.member.toString(),
+                  style: getMyMediumTextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(
+                height: PaddingManger.kPadding / 5,
+              ),
+
+            ],
+          )
+        ],
+      ),
     ),
   );
 
@@ -360,8 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CircleAvatar(
             radius: 45,
-            backgroundImage: NetworkImage(
-                'https://static.vecteezy.com/system/resources/thumbnails/051/948/045/small_2x/a-smiling-man-with-glasses-wearing-a-blue-sweater-poses-warmly-against-a-white-background-free-photo.jpeg'),
+            backgroundImage: NetworkImage(userModel.profileImage??""),
           ),
           const SizedBox(
             width: PaddingManger.kPadding / 2,
@@ -377,7 +440,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 15,
               ),
               Text(
-                'SoftWare Engineer',
+                userModel.major??"",
                 style: getMyRegulerTextStyle(color: ColorManger.grey),
               ),
 
@@ -392,4 +455,5 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ),
   );
+
 }
