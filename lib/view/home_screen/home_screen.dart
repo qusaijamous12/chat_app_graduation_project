@@ -359,8 +359,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildGroupChat(GroupModel model) => GestureDetector(
     onTap: ()async{
       if(await _userController.isUserAcceptedOrNot(groupId: model.uid)){
-        print('sasasa');
-        Get.to(()=>const ChatGroupScreen());
+
+        Get.to(()=> ChatGroupScreen(model: model,));
       }else{
         Get.to(()=> GroupDetails(model: model,));
       }

@@ -1,3 +1,4 @@
+import 'package:chat_app/model/group_chat_model.dart';
 import 'package:chat_app/model/group_model.dart';
 import 'package:chat_app/model/request_model.dart';
 import 'package:chat_app/view/admin_screen/admin_screen.dart';
@@ -27,6 +28,8 @@ class UserController extends GetxController {
   
   final _allGroups=RxList<GroupModel>([]);
   final _allRequests=RxList<RequestModel>([]);
+
+  final _allChatMessageGroup=RxList<GroupChatModel>([]);
 
 
   Future<void> login({required String email, required String password}) async {
@@ -560,6 +563,38 @@ class UserController extends GetxController {
     
   }
 
+
+
+  Future<void> getMessagesGroup({required String uid})async{
+
+
+    _isLoading(true);
+
+    await _instance.collection('groups').doc(uid).collection('messages').orderBy('dateTime',descending: true).snapshots().listen((event){
+      _allChatMessageGroup.clear();
+      event.docs.forEach((element){
+        _allChatMessageGroup.add(GroupChatModel.fromJson(element.data()));
+      });
+
+    });
+    _isLoading(false);
+
+  }
+  Future<void>sendMessageGroup({required String uid,required String message,required String senderUid,String? image, required String profileImage})async{
+    var dateTime = Timestamp.fromDate(DateTime.now());
+    await _instance.collection('groups').doc(uid).collection('messages').add({
+      'message':message,
+      'sender_uid':senderUid,
+      'date_time':dateTime,
+      'profile_image':profileImage
+
+    }).catchError((error){
+      print('there is an error when send message');
+    });
+  }
+
+
+
   bool get isLoading => _isLoading.value;
 
   UserModel? get userModel => _userModel.value;
@@ -572,6 +607,8 @@ class UserController extends GetxController {
 
   List<ChatModel> get listChatModel => _listChatModel;
   List<GroupModel> get allGroups=>_allGroups;
+
+  List<GroupChatModel> get allChatGroupMessages=>_allChatMessageGroup;
 
   List<RequestModel> get allRequests=>_allRequests;
 }
