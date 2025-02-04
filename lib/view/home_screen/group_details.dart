@@ -58,6 +58,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             MyTextField(
               controller: _groupNameController,
               labelText: 'Group Name',
+              enabled: false,
               prefixIcon: Icon(Icons.drive_file_rename_outline),
             ),
             const SizedBox(
@@ -71,6 +72,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             MyTextField(
               controller: _groupNumberController,
               labelText: 'Group Member',
+              enabled: false,
               prefixIcon: Icon(Icons.group),
             ),
             const SizedBox(
@@ -84,6 +86,7 @@ class _GroupDetailsState extends State<GroupDetails> {
             MyTextField(
               controller: _groupDescriptionController,
               labelText: 'Group Description',
+              enabled: false,
               prefixIcon: Icon(Icons.description_outlined),
             ),
             const SizedBox(

@@ -16,7 +16,8 @@ import '../../shared/widgets/my_app_bar.dart';
 class UserDetailsScreen extends StatefulWidget {
   final bool isUser;
   final UserModel model;
-  const UserDetailsScreen({super.key,this.isUser=false,required this.model});
+  final bool isFromGroup;
+  const UserDetailsScreen({super.key,this.isUser=false,required this.model,this.isFromGroup=false});
 
   @override
   State<UserDetailsScreen> createState() => _UserDetailsScreenState();
@@ -122,7 +123,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 MyTextField(controller: _descriptionController, labelText: 'Description', prefixIcon: Icon(Icons.description),enabled: widget.isUser),
 
 
-                if(widget.isUser)...[
+                if(widget.isUser||widget.isFromGroup)...[
                   const SizedBox(
                     height: 20,
                   ),
@@ -134,6 +135,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                 ),
 
 
+                if(widget.isFromGroup==false)
                 Row(
                   children: [
                     Expanded(child: MyButton(title: widget.isUser?'Update Profile':'Add Friend', onTap: ()async{

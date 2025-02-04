@@ -12,15 +12,15 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../shared/config/resources/color_manger.dart';
 import '../../shared/config/resources/style_manger.dart';
 
-class UserDetailsScreen extends StatefulWidget {
+class UserDetailsAdminScreen extends StatefulWidget {
   final UserModel userModel;
-  const UserDetailsScreen({super.key,required this.userModel});
+  const UserDetailsAdminScreen({super.key,required this.userModel});
 
   @override
-  State<UserDetailsScreen> createState() => _UserDetailsScreenState();
+  State<UserDetailsAdminScreen> createState() => _UserDetailsAdminScreenState();
 }
 
-class _UserDetailsScreenState extends State<UserDetailsScreen> {
+class _UserDetailsAdminScreenState extends State<UserDetailsAdminScreen> {
   final _userNameController=TextEditingController();
   final _emailController=TextEditingController();
   final _userUid=TextEditingController();

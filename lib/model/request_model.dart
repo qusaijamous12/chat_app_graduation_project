@@ -6,6 +6,7 @@ class RequestModel {
   final String name;
   final String phone;
   final String profileImage;
+  final String description;
 
   RequestModel({
     required this.uid,
@@ -13,6 +14,7 @@ class RequestModel {
     required this.major,
     required this.name,
     required this.phone,
+    required this.description,
     required this.status,
     required this.profileImage
   });
@@ -23,6 +25,7 @@ class RequestModel {
         major: json['user_major'],
         name: json['user_name'],
         phone: json['user_phone'],
+        description: json['description'],
         profileImage: json['profile_image'],
         status: json['status']);
   }

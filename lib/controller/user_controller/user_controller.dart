@@ -28,6 +28,7 @@ class UserController extends GetxController {
   
   final _allGroups=RxList<GroupModel>([]);
   final _allRequests=RxList<RequestModel>([]);
+  final _allUsersGroup=RxList<RequestModel>([]);
 
   final _allChatMessageGroup=RxList<GroupChatModel>([]);
 
@@ -492,9 +493,24 @@ class UserController extends GetxController {
       'user_email':_userModel.value?.email,
       'user_phone':_userModel.value?.phoneNumber,
       'profile_image':_userModel.value?.profileImage,
+      'description':_userModel.value?.description,
       'status':0,
     }).then((value){Utils.myToast(title: 'Request Send Success');}).catchError((error){
       print('there is an error when join group ! $error');
+    });
+    _isLoading(false);
+
+  }
+  
+  Future<void> getAllUsersAcceptedInGroup({required String groupUid})async{
+    _allUsersGroup.clear();
+    _isLoading(true);
+    await _instance.collection('groups').doc(groupUid).collection('requests').get().then((value){
+      value.docs.forEach((element){
+        if(element['status']==1){
+          _allUsersGroup.add(RequestModel.fromJson(element.data()));
+        }
+      });
     });
     _isLoading(false);
 
@@ -568,31 +584,33 @@ class UserController extends GetxController {
   Future<void> getMessagesGroup({required String uid})async{
 
 
-    _isLoading(true);
 
-    await _instance.collection('groups').doc(uid).collection('messages').orderBy('dateTime',descending: true).snapshots().listen((event){
+    await _instance.collection('groups').doc(uid).collection('messages').orderBy('date_time',descending: false).snapshots().listen((event){
       _allChatMessageGroup.clear();
       event.docs.forEach((element){
+        print('element is $element');
         _allChatMessageGroup.add(GroupChatModel.fromJson(element.data()));
       });
 
     });
-    _isLoading(false);
 
   }
-  Future<void>sendMessageGroup({required String uid,required String message,required String senderUid,String? image, required String profileImage})async{
-    var dateTime = Timestamp.fromDate(DateTime.now());
-    await _instance.collection('groups').doc(uid).collection('messages').add({
-      'message':message,
-      'sender_uid':senderUid,
-      'date_time':dateTime,
-      'profile_image':profileImage
 
-    }).catchError((error){
+  Future<void> sendMessageGroup({required String uid, required String message, required String senderUid, String? image, required String profileImage,required String userName}) async {
+    var dateTime = Timestamp.fromDate(DateTime.now());
+
+    await _instance.collection('groups').doc(uid).collection('messages').add({
+      'message': message,
+      'sender_uid': senderUid,
+      'date_time': dateTime,
+      'profile_image': profileImage,
+      'user_name':userName
+    }).catchError((error) {
       print('there is an error when send message');
     });
-  }
 
+    getMessagesGroup(uid: uid);
+  }
 
 
   bool get isLoading => _isLoading.value;
@@ -611,4 +629,6 @@ class UserController extends GetxController {
   List<GroupChatModel> get allChatGroupMessages=>_allChatMessageGroup;
 
   List<RequestModel> get allRequests=>_allRequests;
+
+  List<RequestModel>  get allUsersGroup=>_allUsersGroup;
 }

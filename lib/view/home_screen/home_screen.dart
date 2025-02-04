@@ -8,12 +8,14 @@ import 'package:chat_app/shared/widgets/my_button.dart';
 import 'package:chat_app/shared/widgets/no%20friends.dart';
 import 'package:chat_app/view/home_screen/chat_group_screen.dart';
 import 'package:chat_app/view/home_screen/chat_screen.dart';
+import 'package:chat_app/view/home_screen/chat_with_ai_screen.dart';
 import 'package:chat_app/view/home_screen/friend_requests_screen.dart';
 import 'package:chat_app/view/home_screen/group_details.dart';
 import 'package:chat_app/view/home_screen/search_screen.dart';
 import 'package:chat_app/view/home_screen/user_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
@@ -109,6 +111,22 @@ class _HomeScreenState extends State<HomeScreen> {
                               Icons.search,
                               color: ColorManger.kPrimaryTwo,
                             )),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      GestureDetector(
+                        onTap: (){
+                          // Get.to(()=>const SearchScreen());
+                          Get.to(()=>ChatWithAiScreen());
+
+                        },
+                        child: Container(
+                            padding: EdgeInsetsDirectional.all(
+                                PaddingManger.kPadding / 4),
+                            decoration: BoxDecoration(
+                                color: Colors.white, shape: BoxShape.circle),
+                            child: SvgPicture.asset('assets/images/robot.svg',height: 30,)),
                       )
                     ],
                   ),

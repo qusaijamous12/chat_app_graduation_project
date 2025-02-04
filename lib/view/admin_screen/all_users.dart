@@ -94,7 +94,7 @@ class _AllUsersState extends State<AllUsers> {
 
   Widget buildUserItem(UserModel model) => GestureDetector(
     onTap: (){
-      Get.to(()=>UserDetailsScreen(userModel: model));
+      Get.to(()=>UserDetailsAdminScreen(userModel: model));
     },
     behavior: HitTestBehavior.opaque,
     child: Row(
