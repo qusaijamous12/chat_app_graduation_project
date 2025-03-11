@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import '../config/resources/color_manger.dart';
 
-PreferredSizeWidget myAppBar({required String title}) => AppBar(
+PreferredSizeWidget myAppBar({required String title,bool ?showIcon=true}) => AppBar(
       backgroundColor: ColorManger.kPrimaryTwo,
       title: Text(
         title,
@@ -13,10 +13,13 @@ PreferredSizeWidget myAppBar({required String title}) => AppBar(
       ),
       leading: IconButton(
           onPressed: () {
-            Get.back();
+            if(showIcon==true){
+              Get.back();
+            }
+
           },
-          icon: const Icon(
+          icon:  Icon(
             Icons.arrow_back_ios,
-            color: Colors.white,
+            color: showIcon==true?Colors.white:ColorManger.kPrimaryTwo,
           )),
     );

@@ -2,6 +2,7 @@ import 'package:chat_app/model/group_chat_model.dart';
 import 'package:chat_app/model/group_model.dart';
 import 'package:chat_app/model/request_model.dart';
 import 'package:chat_app/view/admin_screen/admin_screen.dart';
+import 'package:chat_app/view/deleted_account_screen.dart';
 import 'package:chat_app/view/home_screen/chat_screen.dart';
 import 'package:chat_app/view/home_screen/group_details.dart';
 import 'package:chat_app/view/home_screen/home_screen.dart';
@@ -18,7 +19,7 @@ import '../../view/login_screen/login_screen.dart';
 
 class UserController extends GetxController {
   final _isLoading = RxBool(false);
-  final _userModel = Rxn<UserModel>();
+  Rxn<UserModel> _userModel = Rxn<UserModel>();
 
   final _allUsers = RxList<UserModel>([]);
   final _allFriendRequest = RxList<UserModel>([]);
@@ -32,8 +33,13 @@ class UserController extends GetxController {
 
   final _allChatMessageGroup=RxList<GroupChatModel>([]);
 
+  void removeUserModel(){
+    _userModel=Rxn<UserModel>(null);
+}
+
 
   Future<void> login({required String email, required String password}) async {
+    removeUserModel();
     _isLoading(true);
     try {
       final result = await FirebaseAuth.instance
@@ -42,14 +48,26 @@ class UserController extends GetxController {
       if (result.user != null) {
         await getUserData(uid: result.user!.uid);
 
-        Utils.myToast(title: 'Login Success');
-        if (_userModel.value?.status == 0) {
-          Get.offAll(() => const HomeScreen());
+        print('user model is is is ${_userModel.value?.status} and name is is s ${_userModel.value?.userName}');
+        if(_userModel.value!=null){
+          if (_userModel.value?.status == 0) {
+            print('yes qusai');
+            Get.offAll(() => const HomeScreen());
+            Utils.myToast(title: 'Login Success');
+          }
+          else if (_userModel.value?.status == 1) {
+            print('yes admin !');
+            Get.offAll(() => const AdminScreen());
+            Utils.myToast(title: 'Login Success');
+          }
         }
-        if (_userModel.value?.status == 1) {
-          Get.offAll(() => const AdminScreen());
+        else{
+          Get.offAll(()=>const DeletedAccountScreen());
         }
-      } else {
+
+
+      }
+      else {
         Utils.myToast(title: 'Login Failed');
       }
     } catch (e) {
@@ -59,10 +77,7 @@ class UserController extends GetxController {
     _isLoading(false);
   }
 
-  Future<void> createAccount(
-      {required String email,
-      required String name,
-      required String password,
+  Future<void> createAccount({required String email, required String name, required String password,
       required String phoneNumber,
       int status = 0,
       required String age,
@@ -148,6 +163,7 @@ class UserController extends GetxController {
       if (result.data() != null) {
         _userModel(UserModel.fromJson(result.data()!));
       } else {
+        _userModel(null);
         Utils.myToast(title: 'Please Check your network!');
       }
     } catch (e) {

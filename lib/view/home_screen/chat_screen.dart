@@ -38,7 +38,7 @@ class ChatScreen extends StatefulWidget {
 
     @override
     void dispose() {
-      _scrollController.dispose(); // Dispose of the controller when the widget is disposed.
+      _scrollController.dispose();
       super.dispose();
     }
 

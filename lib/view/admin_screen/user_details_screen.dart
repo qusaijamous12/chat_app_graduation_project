@@ -207,12 +207,12 @@ class _UserDetailsAdminScreenState extends State<UserDetailsAdminScreen> {
               const SizedBox(
                 height: PaddingManger.kPadding*2,
               ),
-             Obx(()=> ConditionalBuilder(
-                 condition:_userController.isLoading ,
-                 builder: (context)=>Center(child: CircularProgressIndicator(color: ColorManger.kPrimaryTwo,)),
-                 fallback: (context)=>MyButton(title: 'Delete', onTap: ()async{
-                   await _userController.deleteUser(uid: widget.userModel.uid!);
-                 }, btnColor: ColorManger.kPrimaryTwo, textColor: Colors.white)))
+             // Obx(()=> ConditionalBuilder(
+             //     condition:_userController.isLoading ,
+             //     builder: (context)=>Center(child: CircularProgressIndicator(color: ColorManger.kPrimaryTwo,)),
+             //     fallback: (context)=>MyButton(title: 'Delete', onTap: ()async{
+             //       await _userController.deleteUser(uid: widget.userModel.uid!);
+             //     }, btnColor: ColorManger.kPrimaryTwo, textColor: Colors.white)))
 
             ],
           ),
